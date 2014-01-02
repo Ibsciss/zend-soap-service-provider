@@ -1,0 +1,34 @@
+{
+    "name": "ibsciss/zend-soap-service-provider",
+    "description": "A soap service provider, based on ZendSoap from ZendFramwork project.",
+    "keywords": ["silex", "zend", "soap", "zendsoap"],
+    "license": "MIT",
+    "minimum-stability": "dev",
+    "authors": [
+        {
+            "name": "Ibsciss",
+            "email": "community@ibsciss.com",
+            "homepage": "http://www.ibsciss.com"
+        },
+        {
+            "name": "Arnaud LEMAIRE",
+            "email" : "alemaire@ibsciss.com"
+        }
+    ],
+    "support": {
+        "email": "community@ibsciss.com",
+        "issues" : "https://github.com/Ibsciss/zend-soap-service-provider/issues"
+    },
+    "require": {
+        "zendframework/zend-soap": "~2.2",
+        "silex/silex": "~1.0"
+    },
+    "suggest": {
+        "silex/silex": "for the integration with your silex application"
+    },
+    "autoload": {
+        "psr-0": {
+            "Ibsciss": "src/"
+        }
+    }
+}
