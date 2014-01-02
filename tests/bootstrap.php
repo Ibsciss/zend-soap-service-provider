@@ -1,4 +1,4 @@
 <?php
 
 $loader = require __DIR__.'/../vendor/autoload.php';
-$loader->add('Silex\Tests', __DIR__);
+$loader->add('Ibsciss\Tests', __DIR__);
