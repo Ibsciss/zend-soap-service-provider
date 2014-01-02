@@ -23,9 +23,6 @@
         "zendframework/zend-soap": "~2.2",
         "silex/silex": "~1.0"
     },
-    "suggest": {
-        "silex/silex": "for the integration with your silex application"
-    },
     "autoload": {
         "psr-0": {
             "Ibsciss": "src/"
