@@ -23,10 +23,13 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 ###Basic usages
 
 When the service provider is registred, you have access to the two basic services :
-* `soap.server` : a `Zend\Soap\Server` instance
-* `soap.client` : a `Zend\Soap\Client` instance
+* `soap.server // instance of Zend\Soap\Server`
+* `soap.client // instance of Zend\Soap\Client`
 
 ```php
+$app = new Application();
+$app->register(new ZendSoapServiceProvider());
+
 //client method call
 $app['soap.client']->methodCall();
 
@@ -36,7 +39,7 @@ $app['soap.server']->handle();
 
 ###Multiple instances
 
-If you need more than only one connexion, you can define differents instances using `soap.instances` parameters.
+If you need more connexion, you can define several instances using `soap.instances` parameters.
 
 ```php
 //during registration
@@ -44,7 +47,7 @@ $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
         'connexion_one', 
         'connexion_two'
-    );
+    )
 ));
 
 // --- OR --- 
@@ -55,17 +58,20 @@ $app['soap.instances'] = array(
 );
 ```
 
-You have access to you instances with the both `soap.clients` and `soap.servers` services.
-The first defined service became the default one and is also accessible from `soap.client` and `soap.server` services.
+You have access to you instances with the two services :
+* `soap.clients` 
+* `soap.servers`
+
+*The first defined service is the default one and became accessible from `soap.client` and `soap.server` services.*
 
 ```php
-$app['soap.clients']['connexion_one']; //equivalent to $app['soap.client'];
+$app['soap.clients']['connexion_one']; //same as $app['soap.client'];
 $app['soap.servers']['connexion_two'];
 ```
 
 ###WSDL management
 
-You can provide a (optional) WSDL for the global service with the `soap.wsdl` parameters.
+You can provide a (optional) WSDL for the global service with the `soap.wsdl` parameter.
 
 ```php
 //during registration
@@ -73,13 +79,12 @@ $app->register(new ZendSoapServiceProvider(), array(
     'soap.wsdl' => '<wsdl></wsdl>';
 ));
 // --- OR --- 
-$app->register(new ZendSoapServiceProvider());
 $app['soap.wsdl'] = '<wsdl></wsdl>';
 
-$app['soap.server]->getWsdl(); //return <wsdl></wsdl>
+$app['soap.server']->getWsdl(); //return <wsdl></wsdl>
 ```
 
-For multiple instances, maybe you want to define another wsdl for a specific instance :
+For multiple instances, its possible to define wsdl for a specific instance :
 
 ```php
 //during registration
@@ -92,14 +97,13 @@ $app->register(new ZendSoapServiceProvider(), array(
 ));
 
 // --- OR --- 
-$app->register(new ZendSoapServiceProvider());
 $app['soap.wsdl'] = '<wsdl></wsdl>';
 $app['soap.instances'] = array(
     'connexion_one'
     'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
 );
 
-//you don't have to specify global wsdl if you provide one for each instance
+//if you provide one wsdl per instance you don't have to specify a global one 
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
         'connexion_one' => array('wsdl' => '<wsdl></wsdl>'), 
@@ -115,13 +119,10 @@ $app['soap.servers']['connexion_two']->getWsdl() //return <wsdl>anotherOne</wsdl
 
 ###Change Soap class
 
-If you want to use your own personal soap class, or for test purpose, you can override the soap server or client class.
-* At the global level 
-* At an instance level
+If you want to use your own personal soap class, or for test purpose. You can override the soap, server or client, class.
 
 ```php
 //global level
-$app = new Application();
 $app->register(new ZendSoapServiceProvider());
 
 $app['soap.server.class'] = '\stdClass';
@@ -131,7 +132,7 @@ $app['soap.client']; //instanceOf stdClass;
 $app['soap.server']; //instanceOf stdClass;
 
 //----------------
-//example for a specific instance override level
+//you can also override at the instance scope
 $app = new Application();
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
@@ -150,13 +151,14 @@ $app['soap.servers']['connexion_two']; //instanceOf Zend\Soap\Server
 ###DotNet specific mode
 
 The dotNet framework process soap parameters a little differente than PHP or Java implementations. 
+
 So, if you have to integrate your soap webservices with a dotNet server, set the `soap.dotNet` option at `true`.
 
 ```php
 $app['soap.dotNet'] = true;
 $app['soap.client'] // instanceOf Zend\Soap\Client\DotNet
 
-//you can also define it at the instance level
+//you can also define it at the instance scope
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
         'connexion_one' => array('dotNet' => true),
@@ -168,4 +170,4 @@ $app['soap.clients']['connexion_one']; //instanceOf Zend\Soap\Client\DotNet
 $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 ```
 
-**If you override the soap.client.class the dotNet option is disabled an the provide class is used instead.**
+*If you override the `soap.client.class` the dotNet option is disabled and the provided class is used instead.*
