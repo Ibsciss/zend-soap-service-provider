@@ -7,7 +7,7 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 * [Zend Soap Server](http://framework.zend.com/manual/2.2/en/modules/zend.soap.server.html)
 * [Zend Soap Client](http://framework.zend.com/manual/2.2/en/modules/zend.soap.client.html)
 
-The whole projet is bullet proof unit tested,
+The whole projet is unit tested : 
 
 ##Why a Zend Soap silex service provider ?
 
