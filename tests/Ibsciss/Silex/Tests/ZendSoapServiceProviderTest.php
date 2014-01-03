@@ -84,9 +84,26 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = new Application();
         $app->register(new ZendSoapServiceProvider(), array(
+            'soap.wsdl' => '<wsdl></wsdl>',
             'soap.instances' => array(
-                'connexion_one' => array('soap.wsdl' => '<wsdl>one</wsdl>'),
-                'connexion_two' => array('soap.wsdl' => '<wsdl>two</wsdl>')
+                'connexion_one',
+                'connexion_two'
+            )
+        ));
+        
+        $this->assertEquals($app['soap.clients']['connexion_one']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.clients']['connexion_two']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.servers']['connexion_one']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.servers']['connexion_two']->getWsdl(), '<wsdl></wsdl>');
+    }
+    
+    public function testIfDiffrentWsdlAreLoadedInMultipleInstance()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider(), array(
+            'soap.instances' => array(
+                'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
+                'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
             )
         ));
         
@@ -94,6 +111,69 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($app['soap.clients']['connexion_two']->getWsdl(), '<wsdl>two</wsdl>');
         $this->assertEquals($app['soap.servers']['connexion_one']->getWsdl(), '<wsdl>one</wsdl>');
         $this->assertEquals($app['soap.servers']['connexion_two']->getWsdl(), '<wsdl>two</wsdl>');
+    }
+    
+    public function testIfFirstLoadedInstanceIsTheDefaultOne()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider(), array(
+            'soap.instances' => array(
+                'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
+                'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
+            )
+        ));
+        
+        $this->assertSame($app['soap.clients']['connexion_one'], $app['soap.client']);
+        $this->assertSame($app['soap.servers']['connexion_one'], $app['soap.server']);
+    }
+    
+    public function testOverloadingDefaultSoapClass()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+        $app['soap.server.class'] = '\stdClass';
+        $app['soap.client.class'] = '\stdClass';
+        $this->assertInstanceOf('\stdClass', $app['soap.client']);
+        $this->assertInstanceOf('\stdClass', $app['soap.server']);
+    }
+    
+    public function testOverloadingSpecificInstanceClass()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+        $app['soap.instances'] = array(
+            'connexion_one' => array('server.class' => '\stdClass'),
+            'connexion_two' => array('client.class' => '\stdClass')
+        );
+        
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
+        $this->assertInstanceOf('stdClass', $app['soap.servers']['connexion_one']);
+
+        $this->assertInstanceOf('stdClass', $app['soap.clients']['connexion_two']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_two']);
+    }
+    
+    public function testGlobalDotNetMode()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+        $app['soap.dotNet'] = true;
+        
+        $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.client']);
+    }
+    
+    public function testDotNetModeForSpecificInstance()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider(), array(
+            'soap.instances' => array(
+                'connexion_one',
+                'connexion_two' => array('dotNet' => true)
+            )
+        ));
+        
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
+        $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
     }
 }
 
