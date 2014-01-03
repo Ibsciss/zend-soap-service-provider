@@ -48,7 +48,12 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
             
             foreach($app['soap.instances'] as $name => $value){
                 
-                $name = (is_array($value)) ? $name : $value;
+                //php5.3 compatibility, see php.net/manual/en/function.isset.php#refsect1-function.isset-examples "isset on string offset"
+                if(!is_array($value)){
+                    $name = $value;
+                    $value = array();
+                }
+                
                 $wsdl = (isset($value['wsdl'])) ? $value['wsdl'] : $app['soap.wsdl'];
                 
                 $container_client[$name] = $container_client->share(function() use ($wsdl, $app, $value){
