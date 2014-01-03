@@ -7,6 +7,8 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 * [Zend Soap Server](http://framework.zend.com/manual/2.2/en/modules/zend.soap.server.html)
 * [Zend Soap Client](http://framework.zend.com/manual/2.2/en/modules/zend.soap.client.html)
 
+The whole projet is bullet proof unit tested,
+
 ##Why a Zend Soap silex service provider ?
 
 * For testing
@@ -23,8 +25,8 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 ###Basic usages
 
 When the service provider is registred, you have access to the two basic services :
-* `soap.server // instance of Zend\Soap\Server`
-* `soap.client // instance of Zend\Soap\Client`
+* **soap.server**, instance of Zend\Soap\Server`
+* **soap.client**, instance of Zend\Soap\Client`
 
 ```php
 $app = new Application();
@@ -136,8 +138,8 @@ $app['soap.server']; //instanceOf stdClass;
 $app = new Application();
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one' => array('soap.server.class' => '\stdClass'),
-        'connexion_two' => array('soap.client.class' => '\stdClass')
+        'connexion_one' => array('server.class' => '\stdClass'),
+        'connexion_two' => array('client.class' => '\stdClass')
     )
 ));
 
@@ -171,3 +173,32 @@ $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 ```
 
 *If you override the `soap.client.class` the dotNet option is disabled and the provided class is used instead.*
+
+##Summary
+
+###Services 
+
+* **soap.client** : default soap client instance, alias of the first defined instances
+* **soap.server** : default soap server instance, alias of the first defined instances
+* **soap.clients** : soap clients instances container 
+* **soap.servers** : soap servers instances container
+
+###parameters
+
+* **soap.wsdl** : global wsdl
+* **soap.client.class** : override client factory class 
+* **soap.server.class** : override server factory class
+* **soap.dotNet** : enable dotNet mode, use of Soap\Client\DotNet class
+
+All parameters can be define at the instance level :
+
+```php
+$app['soap.instances'] = array(
+    'connexion_two' => array(
+        'wsdl' => '<wsdl>anotherOne</wsdl>',
+        'client.class' => '\stdClass',
+        'server.class' => '\stdClass',
+        'dotNet' => true
+    )
+);
+```
