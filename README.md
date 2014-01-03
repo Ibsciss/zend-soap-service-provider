@@ -1,13 +1,12 @@
 zend-soap-service-provider
 ==========================
 
-A soap service provider for Silex, based on the ZendSoap component from ZendFramework project.
+A soap service provider for Silex, based on the ZendSoap component from ZendFramework project. [![Build Status](https://travis-ci.org/Ibsciss/zend-soap-service-provider.png?branch=master)](https://travis-ci.org/Ibsciss/zend-soap-service-provider)
+
 
 For more informations about Zend Soap, check the Zend Framework documentation : 
 * [Zend Soap Server](http://framework.zend.com/manual/2.2/en/modules/zend.soap.server.html)
 * [Zend Soap Client](http://framework.zend.com/manual/2.2/en/modules/zend.soap.client.html)
-
-The whole projet is unit tested : [![Build Status](https://travis-ci.org/Ibsciss/zend-soap-service-provider.png?branch=master)](https://travis-ci.org/Ibsciss/zend-soap-service-provider).
 
 ##Why a Zend Soap silex service provider ?
 
