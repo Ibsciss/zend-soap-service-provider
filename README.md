@@ -149,6 +149,46 @@ $app['soap.clients']['connexion_two']; //instanceOf stdClass
 $app['soap.servers']['connexion_two']; //instanceOf Zend\Soap\Server
 ```
 
+###Change Soap version
+
+You are able to specify the soap version using the `soap.version` attribute :
+
+```php
+    $app->register(new ZendSoapServiceProvider(), array(
+        'soap.version' => SOAP_1_1
+    ));
+
+    // ----- OR -----
+
+    $app['soap.version'] = SOAP_1.1;
+
+    //results :
+    $app['soap.client']->getSoapVersion(); // SOAP_1_1;
+    $app['soap.server']->getSoapVersion(); // SOAP_1_1;
+    
+    // At the instance level :
+    // -----------------------
+
+    $app->register(new ZendSoapServiceProvider(), array(
+        'soap.instances' => array(
+            'connexion_one' => array('version' => SOAP_1_1),
+            'connexion_two' => array('dotNet' => true),
+            'connexion_three'
+        )
+    ));
+
+    $app['soap.clients']['connexion_one']->getSoapVersion(); // SOAP_1_1
+    $app['soap.servers']['connexion_one']->getSoapVersion(); // SOAP_1_1
+
+    //dotNet use 1.1 by default;
+    $app['soap.clients']['connexion_two']->getSoapVersion(); // SOAP_1_1
+    $app['soap.servers']['connexion_two']->getSoapVersion(); // SOAP_1_2
+
+    //default config
+    $app['soap.clients']['connexion_three']->getSoapVersion(); // SOAP_1_2
+    $app['soap.servers']['connexion_three']->getSoapVersion(); // SOAP_1_2
+```
+
 ###DotNet specific mode
 
 The dotNet framework process soap parameters a little differente than PHP or Java implementations. 
@@ -188,6 +228,7 @@ $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 * **soap.client.class** : override client factory class 
 * **soap.server.class** : override server factory class
 * **soap.dotNet** : enable dotNet mode, use of Soap\Client\DotNet class
+* **soap.version** : define SOAP version, accept constant SOAP_1.1 or SOAP_1.2 as value
 
 All parameters can be define at the instance level :
 
@@ -197,7 +238,8 @@ $app['soap.instances'] = array(
         'wsdl' => '<wsdl>anotherOne</wsdl>',
         'client.class' => '\stdClass',
         'server.class' => '\stdClass',
-        'dotNet' => true
+        'dotNet' => true,
+        'version' => SOAP_1.1
     )
 );
 ```

@@ -175,6 +175,41 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
         $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
     }
+    
+    public function testVersionSetForGlobalInstances()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider(), array(
+            'soap.version' => SOAP_1_1
+        ));
+        
+        $this->assertEquals($app['soap.client']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.server']->getSoapVersion(), SOAP_1_1);
+
+    }
+    
+    public function testVersionForSpecificInstances()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider(), array(
+            'soap.instances' => array(
+                'connexion_one' => array('version' => SOAP_1_1),
+                'connexion_two' => array('dotNet' => true),
+                'connexion_three'
+            )
+        ));
+        
+        $this->assertEquals($app['soap.clients']['connexion_one']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.servers']['connexion_one']->getSoapVersion(), SOAP_1_1);
+        
+        //dotNet use 1.1 by default
+        $this->assertEquals($app['soap.clients']['connexion_two']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.servers']['connexion_two']->getSoapVersion(), SOAP_1_2);
+        
+        //check default config
+        $this->assertEquals($app['soap.clients']['connexion_three']->getSoapVersion(), SOAP_1_2);
+        $this->assertEquals($app['soap.servers']['connexion_three']->getSoapVersion(), SOAP_1_2);
+    }
 }
 
 ?>
