@@ -160,7 +160,7 @@ You are able to specify the soap version using the `soap.version` attribute :
 
     // ----- OR -----
 
-    $app['soap.version'] = SOAP_1.1;
+    $app['soap.version'] = SOAP_1_1;
 
     //results :
     $app['soap.client']->getSoapVersion(); // SOAP_1_1;
