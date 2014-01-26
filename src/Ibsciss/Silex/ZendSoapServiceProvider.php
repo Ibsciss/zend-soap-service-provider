@@ -14,10 +14,9 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
         $app['soap.wsdl'] = (isset($app['soap.wsdl'])) ? $app['soap.wsdl'] : null;
         $app['soap.dotNet'] = (isset($app['soap.dotNet'])) ? $app['soap.dotNet'] : false;
         $app['soap.server.class'] = (isset($app['soap.server.class'])) ? $app['soap.server.class'] : '\Zend\Soap\Server';
+        $app['soap.client.class'] = (isset($app['soap.client.class'])) ? $app['soap.client.class'] : '\Zend\Soap\Client';
+        $app['soap.client.dotNet.class'] = (isset($app['soap.client.dotNet.class'])) ? $app['soap.client.dotNet.class'] : '\Zend\Soap\Client\DotNet';
         $app['soap.version'] = (isset($app['soap.version'])) ? $app['soap.version'] : null;
-        $app['soap.client.class'] = $app->share(function($app){
-            return ($app['soap.dotNet']) ? '\Zend\Soap\Client\DotNet' : '\Zend\Soap\Client';
-        });
         
         //define shortcut
         $app['soap.clients'] = $app->share(function($app){
@@ -45,27 +44,31 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
                 $app['soap.instances'] = array('default');
             }
             
-            foreach($app['soap.instances'] as $name => $value){
+            foreach($app['soap.instances'] as $name => $instanceConfig){
                 
                 //php5.3 compatibility, see php.net/manual/en/function.isset.php#refsect1-function.isset-examples "isset on string offset"
-                if(!is_array($value)){
-                    $name = $value;
-                    $value = array();
+                if(!is_array($instanceConfig)){
+                    $name = $instanceConfig;
+                    $instanceConfig = array();
                 }
                 
-                $wsdl = (isset($value['wsdl'])) ? $value['wsdl'] : $app['soap.wsdl'];
-                $version = (isset($value['version'])) ? $value['version'] : $app['soap.version'];
+                $wsdl = (isset($instanceConfig['wsdl'])) ? $instanceConfig['wsdl'] : $app['soap.wsdl'];
+                $version = (isset($instanceConfig['version'])) ? $instanceConfig['version'] : $app['soap.version'];
                 $options = array();
                 if(!is_null($version)) $options['soap_version'] = $version;
                 
-                $container_client[$name] = $container_client->share(function() use ($wsdl, $app, $value, $options){
-                    $defaultClass = (isset($value['dotNet']) && $value['dotNet']) ? '\Zend\Soap\Client\DotNet' : $app['soap.client.class'];
-                    $class = (isset($value['client.class'])) ? $value['client.class'] : $defaultClass;
+                $container_client[$name] = $container_client->share(function() use ($wsdl, $app, $instanceConfig, $options){
+                    //dotNet mode
+                    if($app['soap.dotNet'] || (isset($instanceConfig['dotNet']) && $instanceConfig['dotNet'])){
+                        $class = (isset($instanceConfig['client.dotNet.class'])) ? $instanceConfig['client.dotNet.class'] : $app['soap.client.dotNet.class'];
+                    }else{
+                        $class = (isset($instanceConfig['client.class'])) ? $instanceConfig['client.class'] : $app['soap.client.class'];
+                    } 
                     return new $class($wsdl, $options);
                 });
                 
-                $container_server[$name] = $container_server->share(function() use ($wsdl, $app, $value, $options){
-                    $class = (isset($value['server.class'])) ? $value['server.class'] : $app['soap.server.class'];
+                $container_server[$name] = $container_server->share(function() use ($wsdl, $app, $instanceConfig, $options){
+                    $class = (isset($instanceConfig['server.class'])) ? $instanceConfig['server.class'] : $app['soap.server.class'];
                     return new $class($wsdl, $options);
                 });
                 

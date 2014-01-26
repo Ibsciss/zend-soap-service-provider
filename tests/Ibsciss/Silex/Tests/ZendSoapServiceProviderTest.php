@@ -210,6 +210,34 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($app['soap.clients']['connexion_three']->getSoapVersion(), SOAP_1_2);
         $this->assertEquals($app['soap.servers']['connexion_three']->getSoapVersion(), SOAP_1_2);
     }
+
+    public function testOverloadingDefaultDotNetClass()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+        $app['soap.client.dotNet.class'] = '\stdClass';
+        $app['soap.dotNet'] = true;
+        $this->assertInstanceOf('\stdClass', $app['soap.client']);
+    }
+    
+    public function testOverloadingSpecificInstanceDotNetClass()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+        $app['soap.instances'] = array(
+            'connexion_one' => array(
+                'dotNet' => true,
+                'client.dotNet.class' => '\stdClass'
+            ),
+            'connexion_two' => array('dotNet' => true),
+            'connexion_three'
+        );
+        
+        $this->assertInstanceOf('\stdClass', $app['soap.clients']['connexion_one']);
+        $this->assertInstanceOf('\Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
+        $this->assertInstanceOf('\Zend\Soap\Client', $app['soap.clients']['connexion_three']);
+
+    }
 }
 
 ?>

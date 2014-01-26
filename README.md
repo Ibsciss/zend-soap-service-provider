@@ -104,6 +104,11 @@ $app['soap.instances'] = array(
     'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
 );
 
+```
+
+**Note :** if you provide one wsdl per instance you don't have to specify a global one
+
+```php 
 //if you provide one wsdl per instance you don't have to specify a global one 
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
@@ -120,7 +125,9 @@ $app['soap.servers']['connexion_two']->getWsdl() //return <wsdl>anotherOne</wsdl
 
 ###Change Soap class
 
-If you want to use your own personal soap class, or for test purpose. You can override the soap, server or client, class.
+If you want to use your own personal soap class, or for test purpose. You can override the soap, server or client, class with the `soap.client.class` and `soap.server.class`.
+
+**Warning:** If you are in dotNet mode, you have to use `soap.client.dotNet.class` (or `client.dotNet.class` for an instance override).
 
 ```php
 //global level
@@ -151,7 +158,11 @@ $app['soap.servers']['connexion_two']; //instanceOf Zend\Soap\Server
 
 ###Change Soap version
 
-You are able to specify the soap version using the `soap.version` attribute :
+You are able to specify the soap version using the `soap.version` attribute.
+The allowed values are :
+
+* SOAP_1_1
+* SOAP_1_2 (default value)
 
 ```php
     $app->register(new ZendSoapServiceProvider(), array(
@@ -166,8 +177,8 @@ You are able to specify the soap version using the `soap.version` attribute :
     $app['soap.client']->getSoapVersion(); // SOAP_1_1;
     $app['soap.server']->getSoapVersion(); // SOAP_1_1;
     
-    // At the instance level :
     // -----------------------
+    //like others options, you can define it at the instance level :
 
     $app->register(new ZendSoapServiceProvider(), array(
         'soap.instances' => array(
@@ -211,7 +222,7 @@ $app['soap.clients']['connexion_one']; //instanceOf Zend\Soap\Client\DotNet
 $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 ```
 
-*If you override the `soap.client.class` the dotNet option is disabled and the provided class is used instead.*
+*If you want to override the dotNet class, use the `soap.client.dotNet.class` attribute instead of `soap.client.class`.*
 
 ##Summary
 
@@ -228,7 +239,8 @@ $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 * **soap.client.class** : override client factory class 
 * **soap.server.class** : override server factory class
 * **soap.dotNet** : enable dotNet mode, use of Soap\Client\DotNet class
-* **soap.version** : define SOAP version, accept constant SOAP_1.1 or SOAP_1.2 as value
+* **soap.client.dotNet.class** : override client factory class in dotNet mode 
+* **soap.version** : define SOAP version, accept constant SOAP_1_1 or SOAP_1_2 as value (default is SOAP_1_2 unless in dotNet mode)
 
 All parameters can be define at the instance level :
 
@@ -239,7 +251,8 @@ $app['soap.instances'] = array(
         'client.class' => '\stdClass',
         'server.class' => '\stdClass',
         'dotNet' => true,
-        'version' => SOAP_1.1
+        'client.dotNet.class' => '\stdClass',
+        'version' => SOAP_1_1
     )
 );
 ```
