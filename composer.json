@@ -1,7 +1,7 @@
 {
     "name": "ibsciss/zend-soap-service-provider",
     "description": "A soap service provider, based on ZendSoap from ZendFramwork project.",
-    "keywords": ["silex", "zend", "soap", "zendsoap"],
+    "keywords": ["silex", "zend", "soap", "zendsoap", "zend-soap", "service provider", "service-provider", "framework"],
     "license": "MIT",
     "minimum-stability": "dev",
     "authors": [
