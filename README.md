@@ -4,7 +4,7 @@ zend-soap-service-provider
 A soap service provider for Silex, based on the ZendSoap component from ZendFramework project. [![Build Status](https://travis-ci.org/Ibsciss/zend-soap-service-provider.png?branch=master)](https://travis-ci.org/Ibsciss/zend-soap-service-provider)
 
 
-For more informations about Zend Soap, check the Zend Framework documentation : 
+For more informations about Zend Soap, check the Zend Framework documentation :
 * [Zend Soap Server](http://framework.zend.com/manual/2.2/en/modules/zend.soap.server.html)
 * [Zend Soap Client](http://framework.zend.com/manual/2.2/en/modules/zend.soap.client.html)
 
@@ -17,7 +17,7 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 ##Install
 
 1. Add `"ibsciss/zend-soap-service-provider": "dev-master"` in the require section of your `composer.json` and run the `composer install` command.
-2. Register service : `$app->register(new ZendSoapServiceProvider());`;
+2. Register service : `$app->register(new ZendSoapServiceProvider());` and don't forget the `use \Ibsciss\Silex\Provider\ZendSoapServiceProvider` statement.
 
 ##Usages
 
@@ -46,21 +46,21 @@ If you need more connexion, you can define several instances using `soap.instanc
 //during registration
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one', 
+        'connexion_one',
         'connexion_two'
     )
 ));
 
-// --- OR --- 
+// --- OR ---
 $app->register(new ZendSoapServiceProvider());
 $app['soap.instances'] = array(
-    'connexion_one', 
+    'connexion_one',
     'connexion_two'
 );
 ```
 
 You have access to you instances with the two services :
-* `soap.clients` 
+* `soap.clients`
 * `soap.servers`
 
 *The first defined service is the default one and became accessible from `soap.client` and `soap.server` services.*
@@ -79,7 +79,7 @@ You can provide a (optional) WSDL for the global service with the `soap.wsdl` pa
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.wsdl' => '<wsdl></wsdl>';
 ));
-// --- OR --- 
+// --- OR ---
 $app['soap.wsdl'] = '<wsdl></wsdl>';
 
 $app['soap.server']->getWsdl(); //return <wsdl></wsdl>
@@ -92,12 +92,12 @@ For multiple instances, its possible to define wsdl for a specific instance :
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.wsdl' => '<wsdl></wsdl>',
     'soap.instances' => array(
-        'connexion_one', 
+        'connexion_one',
         'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
     );
 ));
 
-// --- OR --- 
+// --- OR ---
 $app['soap.wsdl'] = '<wsdl></wsdl>';
 $app['soap.instances'] = array(
     'connexion_one'
@@ -108,11 +108,11 @@ $app['soap.instances'] = array(
 
 **Note :** if you provide one wsdl per instance you don't have to specify a global one
 
-```php 
-//if you provide one wsdl per instance you don't have to specify a global one 
+```php
+//if you provide one wsdl per instance you don't have to specify a global one
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one' => array('wsdl' => '<wsdl></wsdl>'), 
+        'connexion_one' => array('wsdl' => '<wsdl></wsdl>'),
         'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
     );
 ));
@@ -121,7 +121,35 @@ $app['soap.servers']['connexion_one']->getWsdl() //return <wsdl></wsdl>
 $app['soap.servers']['connexion_two']->getWsdl() //return <wsdl>anotherOne</wsdl>
 ```
 
-##Advanced topic 
+## Differences with the \Zend\Soap implementation
+
+There is two minor change beetween the original `\Zend\Soap` package and the `ZendSoapServiceProvider` provided packages :
+
+## In `\Zend\Soap\Client\DotNet`
+
+A condition is added in the `_preProcessResult` method: the dotNet soap implementation send the result in a `[LastRequest]Result` xml node, so the DotNet _preProcessResult return directly this node.
+
+But in some case, when the method don't return anythings and if this is not define in the ws defition (wsdl for example), this behavior can rise an notice error because the searched node does not exists.
+
+So the serviceProvider extends the `DotNet` class to add a `exists` condition on the `[LastRequest]Result` xml node to avoid this error.
+
+## In `\Zend\Soap\Server`
+
+When an exception is raised in your code the `\Zend\Soap\Server` catch it and check if this is an authorized exception. If not, and for security reason, it send an "Unknow error" messag wich is annoying during developpment.
+
+So the serviceProvider extends the `Server` class to add a `debugMode` wich is automatically activated when the silex `debug` options is `true` (manual enable/disable debug mode is provide with the `setDebugMode($boolean)` server method). Example :
+
+```php
+//enable:
+$app['soap.server']->setDebugMode();
+
+//disable:
+$app['soap.server']->setDebugMode(false);
+````
+
+In debug mode the Server send all exceptions to the soap client.
+
+##Advanced topic
 
 ###Change Soap class
 
@@ -176,7 +204,7 @@ The allowed values are :
     //results :
     $app['soap.client']->getSoapVersion(); // SOAP_1_1;
     $app['soap.server']->getSoapVersion(); // SOAP_1_1;
-    
+
     // -----------------------
     //like others options, you can define it at the instance level :
 
@@ -202,7 +230,7 @@ The allowed values are :
 
 ###DotNet specific mode
 
-The dotNet framework process soap parameters a little differente than PHP or Java implementations. 
+The dotNet framework process soap parameters a little differente than PHP or Java implementations.
 
 So, if you have to integrate your soap webservices with a dotNet server, set the `soap.dotNet` option at `true`.
 
@@ -226,20 +254,20 @@ $app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
 
 ##Summary
 
-###Services 
+###Services
 
 * **soap.client** : default soap client instance, alias of the first defined instances
 * **soap.server** : default soap server instance, alias of the first defined instances
-* **soap.clients** : soap clients instances container 
+* **soap.clients** : soap clients instances container
 * **soap.servers** : soap servers instances container
 
 ###parameters
 
 * **soap.wsdl** : global wsdl
-* **soap.client.class** : override client factory class 
+* **soap.client.class** : override client factory class
 * **soap.server.class** : override server factory class
 * **soap.dotNet** : enable dotNet mode, use of Soap\Client\DotNet class
-* **soap.client.dotNet.class** : override client factory class in dotNet mode 
+* **soap.client.dotNet.class** : override client factory class in dotNet mode
 * **soap.version** : define SOAP version, accept constant SOAP_1_1 or SOAP_1_2 as value (default is SOAP_1_2 unless in dotNet mode)
 
 All parameters can be define at the instance level :

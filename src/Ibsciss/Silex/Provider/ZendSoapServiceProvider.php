@@ -13,9 +13,9 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
         //define options
         $app['soap.wsdl'] = (isset($app['soap.wsdl'])) ? $app['soap.wsdl'] : null;
         $app['soap.dotNet'] = (isset($app['soap.dotNet'])) ? $app['soap.dotNet'] : false;
-        $app['soap.server.class'] = (isset($app['soap.server.class'])) ? $app['soap.server.class'] : '\Zend\Soap\Server';
+        $app['soap.server.class'] = (isset($app['soap.server.class'])) ? $app['soap.server.class'] : '\Ibsciss\Zend\Soap\Server';
         $app['soap.client.class'] = (isset($app['soap.client.class'])) ? $app['soap.client.class'] : '\Zend\Soap\Client';
-        $app['soap.client.dotNet.class'] = (isset($app['soap.client.dotNet.class'])) ? $app['soap.client.dotNet.class'] : '\Zend\Soap\Client\DotNet';
+        $app['soap.client.dotNet.class'] = (isset($app['soap.client.dotNet.class'])) ? $app['soap.client.dotNet.class'] : '\Ibsciss\Zend\Soap\Client\DotNet';
         $app['soap.version'] = (isset($app['soap.version'])) ? $app['soap.version'] : null;
 
         //define shortcut
@@ -68,8 +68,10 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
                 });
 
                 $container_server[$name] = $container_server->share(function() use ($wsdl, $app, $instanceConfig, $options){
-                    $class = (isset($instanceConfig['server.class'])) ? $instanceConfig['server.class'] : $app['soap.server.class'];
-                    return new $class($wsdl, $options);
+                    $serverClassName = (isset($instanceConfig['server.class'])) ? $instanceConfig['server.class'] : $app['soap.server.class'];
+                    $server = new $serverClassName($wsdl, $options);
+                    if($app['debug']) $server->setDebugMode();
+                    return $server;
                 });
 
                 if(!isset($app['soap.instances.default'])){
