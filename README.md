@@ -23,7 +23,7 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 
 ###Basic usages
 
-When the service provider is registred, you have access to the two basic services :
+When the service provider is registered, you have access to the two basic services :
 * **soap.server**, instance of Zend\Soap\Server`
 * **soap.client**, instance of Zend\Soap\Client`
 
@@ -129,15 +129,15 @@ There is two minor change beetween the original `\Zend\Soap` package and the `Ze
 
 A condition is added in the `_preProcessResult` method: the dotNet soap implementation send the result in a `[LastRequest]Result` xml node, so the DotNet _preProcessResult return directly this node.
 
-But in some case, when the method return anythings and if this behavior is not defined in the ws defition (wsdl for example), this behavior can rise an notice error because the searched node does not exists.
+But in some case, when the method return anythings and if this behavior is not defined in the ws definition (wsdl for example), this behavior can rise an notice error because the searched node does not exists.
 
-So the serviceProvider extends the `DotNet` class to add a `exists` condition on the `[LastRequest]Result` xml node to avoid this error.
+So the serviceProvider extends the `DotNet` class to add a `exists` condition on the `[LastRequest]Result` XML node to avoid this error.
 
 ### In `\Zend\Soap\Server`
 
-When an exception is raised in your code the `\Zend\Soap\Server` catch it and check if this is an authorized exception. If not, and for security reason, it send an "Unknow error" messag. And if in production its a sane behavior, its really annoying during developpment & tests process.
+When an exception is raised in your code the `\Zend\Soap\Server` catch it and check if this is an authorized exception. If not, and for security reason, it send an "Unknow error" message. And if in production its a sane behavior, its really annoying during development & tests process.
 
-So the serviceProvider extends the `Server` class to add a `debugMode` method wich is automatically activated when the silex `debug` options is `true` (manual enable/disable debug mode is provide with the `setDebugMode($boolean)` server method).
+So the serviceProvider extends the `Server` class to add a `debugMode` method which is automatically activated when the silex `debug` options is `true` (manual enable/disable debug mode is provide with the `setDebugMode($boolean)` server method).
 Example :
 
 ```php
@@ -231,9 +231,9 @@ The allowed values are :
 
 ###DotNet specific mode
 
-The dotNet framework process soap parameters a little differente than PHP or Java implementations.
+The dotNet framework process soap parameters a little different than PHP or Java implementations.
 
-So, if you have to integrate your soap webservices with a dotNet server, set the `soap.dotNet` option at `true`.
+So, if you have to integrate your soap web services with a dotNet server, set the `soap.dotNet` option at `true`.
 
 ```php
 $app['soap.dotNet'] = true;
