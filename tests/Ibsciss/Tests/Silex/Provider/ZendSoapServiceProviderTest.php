@@ -12,16 +12,14 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 {
     public function testIfClientisLoadedInContainer()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $this->assertInstanceOf('Zend\Soap\Client', $app['soap.client']);
         $this->assertSame($app['zend_soap.client'], $app['soap.client']);
     }
 
     public function testIfServerisLoadedInContainer()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $this->assertInstanceOf('Zend\Soap\Server', $app['soap.server']);
         $this->assertSame($app['zend_soap.server'], $app['soap.server']);
     }
@@ -38,8 +36,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testIfWsdlIsLoadedNotDuringRegister()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.wsdl'] = '<wsdl></wsdl>';
         $this->assertEquals($app['zend_soap.client']->getWsdl(), '<wsdl></wsdl>');
         $this->assertEquals($app['zend_soap.server']->getWsdl(), '<wsdl></wsdl>');
@@ -47,13 +44,8 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleInstanceSupportDuringRegister()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider(), array(
-            'soap.instances' => array(
-                'connexion_one',
-                'connexion_two'
-            )
-        ));
+        $app = $this->getApplication();
+        $app['soap.instances'] = array('connexion_one', 'connexion_two');
 
         $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
         $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_two']);
@@ -65,8 +57,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testMultipleInstanceSupportNotDuringRegister()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.instances'] = array(
             'connexion_one',
             'connexion_two'
@@ -115,13 +106,11 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testIfFirstLoadedInstanceIsTheDefaultOne()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider(), array(
-            'soap.instances' => array(
-                'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
-                'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
-            )
-        ));
+        $app = $this->getApplication();
+        $app['soap.instances'] = array(
+            'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
+            'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
+        );
 
         $this->assertSame($app['soap.clients']['connexion_one'], $app['soap.client']);
         $this->assertSame($app['soap.servers']['connexion_one'], $app['soap.server']);
@@ -129,8 +118,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverloadingDefaultSoapClass()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.server.class'] = '\stdClass';
         $app['soap.client.class'] = '\stdClass';
         $this->assertInstanceOf('\stdClass', $app['soap.client']);
@@ -139,8 +127,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverloadingSpecificInstanceClass()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.instances'] = array(
             'connexion_one' => array('server.class' => '\stdClass'),
             'connexion_two' => array('client.class' => '\stdClass')
@@ -155,8 +142,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testGlobalDotNetMode()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.dotNet'] = true;
 
         $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.client']);
@@ -164,24 +150,19 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testDotNetModeForSpecificInstance()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider(), array(
-            'soap.instances' => array(
-                'connexion_one',
-                'connexion_two' => array('dotNet' => true)
-            )
-        ));
-
+        $app = $this->getApplication();
+        $app['soap.instances'] = array(
+            'connexion_one',
+            'connexion_two' => array('dotNet' => true)
+        );
         $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
         $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
     }
 
     public function testVersionSetForGlobalInstances()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider(), array(
-            'soap.version' => SOAP_1_1
-        ));
+        $app = $this->getApplication();
+        $app['soap.version'] = SOAP_1_1;
 
         $this->assertEquals($app['soap.client']->getSoapVersion(), SOAP_1_1);
         $this->assertEquals($app['soap.server']->getSoapVersion(), SOAP_1_1);
@@ -190,14 +171,12 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testVersionForSpecificInstances()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider(), array(
-            'soap.instances' => array(
-                'connexion_one' => array('version' => SOAP_1_1),
-                'connexion_two' => array('dotNet' => true),
-                'connexion_three'
-            )
-        ));
+        $app = $this->getApplication();
+        $app['soap.instances'] = array(
+            'connexion_one' => array('version' => SOAP_1_1),
+            'connexion_two' => array('dotNet' => true),
+            'connexion_three'
+        );
 
         $this->assertEquals($app['soap.clients']['connexion_one']->getSoapVersion(), SOAP_1_1);
         $this->assertEquals($app['soap.servers']['connexion_one']->getSoapVersion(), SOAP_1_1);
@@ -213,8 +192,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverloadingDefaultDotNetClass()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.client.dotNet.class'] = '\stdClass';
         $app['soap.dotNet'] = true;
         $this->assertInstanceOf('\stdClass', $app['soap.client']);
@@ -222,8 +200,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     public function testOverloadingSpecificInstanceDotNetClass()
     {
-        $app = new Application();
-        $app->register(new ZendSoapServiceProvider());
+        $app = $this->getApplication();
         $app['soap.instances'] = array(
             'connexion_one' => array(
                 'dotNet' => true,
@@ -244,9 +221,22 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
     }
 
+    public function testAutoEnableDebugMode()
+    {
+
+    }
+
     public function testDotNetClientDefaultOverride()
     {
 
+    }
+
+    public function getApplication()
+    {
+        $app = new Application();
+        $app->register(new ZendSoapServiceProvider());
+
+        return $app;
     }
 }
 
