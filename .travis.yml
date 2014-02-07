@@ -5,6 +5,15 @@ php:
   - 5.4
   - 5.5
 
+matrix:
+  allow_failures:
+    - php: hhvm
+
+
 before_script:
   - wget -nc http://getcomposer.org/composer.phar
-  - php composer.phar install
+  - php composer.phar install --dev --no-interaction
+  - mkdir -p build/logs
+
+after_script:
+  - php vendor/bin/coveralls

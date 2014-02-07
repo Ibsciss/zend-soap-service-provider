@@ -23,6 +23,9 @@
         "zendframework/zend-soap": "~2.2",
         "silex/silex": "~1.0"
     },
+    "require-dev": {
+        "satooshi/php-coveralls": "dev-master"
+    },
     "autoload": {
         "psr-0": {
             "Ibsciss": "src/"
