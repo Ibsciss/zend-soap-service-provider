@@ -3,7 +3,7 @@ zend-soap-service-provider
 
 A soap service provider for Silex, based on the ZendSoap component from ZendFramework project.
 
-[![Build Status](https://travis-ci.org/Ibsciss/zend-soap-service-provider.png?branch=master)](https://travis-ci.org/Ibsciss/zend-soap-service-provider) [![Coverage Status](https://coveralls.io/repos/Ibsciss/zend-soap-service-provider/badge.png?branch=master)](https://coveralls.io/r/Ibsciss/zend-soap-service-provider?branch=master)
+[![Build Status](https://travis-ci.org/Ibsciss/zend-soap-service-provider.png?branch=master)](https://travis-ci.org/Ibsciss/zend-soap-service-provider) [![Coverage Status](https://coveralls.io/repos/Ibsciss/zend-soap-service-provider/badge.png?branch=master)](https://coveralls.io/r/Ibsciss/zend-soap-service-provider?branch=master) [![Latest Stable Version](https://poser.pugx.org/ibsciss/zend-soap-service-provider/v/stable.png)](https://packagist.org/packages/ibsciss/zend-soap-service-provider) [![Latest Unstable Version](https://poser.pugx.org/ibsciss/zend-soap-service-provider/v/unstable.png)](https://packagist.org/packages/ibsciss/zend-soap-service-provider) [![License](https://poser.pugx.org/ibsciss/zend-soap-service-provider/license.png)](https://packagist.org/packages/ibsciss/zend-soap-service-provider)
 
 
 For more informations about Zend Soap, check the Zend Framework documentation :
