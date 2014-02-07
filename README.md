@@ -42,22 +42,22 @@ $app['soap.server']->handle();
 
 ###Multiple instances
 
-If you need more connexion, you can define several instances using `soap.instances` parameters.
+If you need more connection, you can define several instances using `soap.instances` parameters.
 
 ```php
 //during registration
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one',
-        'connexion_two'
+        'connection_one',
+        'connection_two'
     )
 ));
 
 // --- OR ---
 $app->register(new ZendSoapServiceProvider());
 $app['soap.instances'] = array(
-    'connexion_one',
-    'connexion_two'
+    'connection_one',
+    'connection_two'
 );
 ```
 
@@ -68,8 +68,8 @@ You have access to you instances with the two services :
 *The first defined service is the default one and became accessible from `soap.client` and `soap.server` services.*
 
 ```php
-$app['soap.clients']['connexion_one']; //same as $app['soap.client'];
-$app['soap.servers']['connexion_two'];
+$app['soap.clients']['connection_one']; //same as $app['soap.client'];
+$app['soap.servers']['connection_two'];
 ```
 
 ###WSDL management
@@ -94,16 +94,16 @@ For multiple instances, its possible to define wsdl for a specific instance :
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.wsdl' => '<wsdl></wsdl>',
     'soap.instances' => array(
-        'connexion_one',
-        'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
+        'connection_one',
+        'connection_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
     );
 ));
 
 // --- OR ---
 $app['soap.wsdl'] = '<wsdl></wsdl>';
 $app['soap.instances'] = array(
-    'connexion_one'
-    'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
+    'connection_one'
+    'connection_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
 );
 
 ```
@@ -114,13 +114,13 @@ $app['soap.instances'] = array(
 //if you provide one wsdl per instance you don't have to specify a global one
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one' => array('wsdl' => '<wsdl></wsdl>'),
-        'connexion_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
+        'connection_one' => array('wsdl' => '<wsdl></wsdl>'),
+        'connection_two' => array('wsdl' => '<wsdl>anotherOne</wsdl>')
     );
 ));
 
-$app['soap.servers']['connexion_one']->getWsdl() //return <wsdl></wsdl>
-$app['soap.servers']['connexion_two']->getWsdl() //return <wsdl>anotherOne</wsdl>
+$app['soap.servers']['connection_one']->getWsdl() //return <wsdl></wsdl>
+$app['soap.servers']['connection_two']->getWsdl() //return <wsdl>anotherOne</wsdl>
 ```
 
 ## Differences with the \Zend\Soap implementation
@@ -175,16 +175,16 @@ $app['soap.server']; //instanceOf stdClass;
 $app = new Application();
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one' => array('server.class' => '\stdClass'),
-        'connexion_two' => array('client.class' => '\stdClass')
+        'connection_one' => array('server.class' => '\stdClass'),
+        'connection_two' => array('client.class' => '\stdClass')
     )
 ));
 
-$app['soap.clients']['connexion_one']; //instanceOf Zend\Soap\Client
-$app['soap.servers']['connexion_one']; //instanceOf stdClass
+$app['soap.clients']['connection_one']; //instanceOf Zend\Soap\Client
+$app['soap.servers']['connection_one']; //instanceOf stdClass
 
-$app['soap.clients']['connexion_two']; //instanceOf stdClass
-$app['soap.servers']['connexion_two']; //instanceOf Zend\Soap\Server
+$app['soap.clients']['connection_two']; //instanceOf stdClass
+$app['soap.servers']['connection_two']; //instanceOf Zend\Soap\Server
 ```
 
 ###Change Soap version
@@ -213,22 +213,22 @@ The allowed values are :
 
     $app->register(new ZendSoapServiceProvider(), array(
         'soap.instances' => array(
-            'connexion_one' => array('version' => SOAP_1_1),
-            'connexion_two' => array('dotNet' => true),
-            'connexion_three'
+            'connection_one' => array('version' => SOAP_1_1),
+            'connection_two' => array('dotNet' => true),
+            'connection_three'
         )
     ));
 
-    $app['soap.clients']['connexion_one']->getSoapVersion(); // SOAP_1_1
-    $app['soap.servers']['connexion_one']->getSoapVersion(); // SOAP_1_1
+    $app['soap.clients']['connection_one']->getSoapVersion(); // SOAP_1_1
+    $app['soap.servers']['connection_one']->getSoapVersion(); // SOAP_1_1
 
     //dotNet use 1.1 by default;
-    $app['soap.clients']['connexion_two']->getSoapVersion(); // SOAP_1_1
-    $app['soap.servers']['connexion_two']->getSoapVersion(); // SOAP_1_2
+    $app['soap.clients']['connection_two']->getSoapVersion(); // SOAP_1_1
+    $app['soap.servers']['connection_two']->getSoapVersion(); // SOAP_1_2
 
     //default config
-    $app['soap.clients']['connexion_three']->getSoapVersion(); // SOAP_1_2
-    $app['soap.servers']['connexion_three']->getSoapVersion(); // SOAP_1_2
+    $app['soap.clients']['connection_three']->getSoapVersion(); // SOAP_1_2
+    $app['soap.servers']['connection_three']->getSoapVersion(); // SOAP_1_2
 ```
 
 ###DotNet specific mode
@@ -244,13 +244,13 @@ $app['soap.client'] // instanceOf Zend\Soap\Client\DotNet
 //you can also define it at the instance scope
 $app->register(new ZendSoapServiceProvider(), array(
     'soap.instances' => array(
-        'connexion_one' => array('dotNet' => true),
-        'connexion_two'
+        'connection_one' => array('dotNet' => true),
+        'connection_two'
     )
 ));
 
-$app['soap.clients']['connexion_one']; //instanceOf Zend\Soap\Client\DotNet
-$app['soap.clients']['connexion_two']; //instanceOf Zend\Soap\Client
+$app['soap.clients']['connection_one']; //instanceOf Zend\Soap\Client\DotNet
+$app['soap.clients']['connection_two']; //instanceOf Zend\Soap\Client
 ```
 
 *If you want to override the dotNet class, use the `soap.client.dotNet.class` attribute instead of `soap.client.class`.*
@@ -277,7 +277,7 @@ All parameters can be define at the instance level :
 
 ```php
 $app['soap.instances'] = array(
-    'connexion_two' => array(
+    'connection_two' => array(
         'wsdl' => '<wsdl>anotherOne</wsdl>',
         'client.class' => '\stdClass',
         'server.class' => '\stdClass',

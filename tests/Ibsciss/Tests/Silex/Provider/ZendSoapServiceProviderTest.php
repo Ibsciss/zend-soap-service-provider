@@ -45,30 +45,30 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     public function testMultipleInstanceSupportDuringRegister()
     {
         $app = $this->getApplication();
-        $app['soap.instances'] = array('connexion_one', 'connexion_two');
+        $app['soap.instances'] = array('connection_one', 'connection_two');
 
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_two']);
-        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_one']);
-        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_two']);
-        $this->assertNotSame($app['soap.servers']['connexion_two'], $app['soap.servers']['connexion_one']);
-        $this->assertNotSame($app['soap.clients']['connexion_two'], $app['soap.clients']['connexion_one']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_one']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_two']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connection_one']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connection_two']);
+        $this->assertNotSame($app['soap.servers']['connection_two'], $app['soap.servers']['connection_one']);
+        $this->assertNotSame($app['soap.clients']['connection_two'], $app['soap.clients']['connection_one']);
     }
 
     public function testMultipleInstanceSupportNotDuringRegister()
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one',
-            'connexion_two'
+            'connection_one',
+            'connection_two'
         );
 
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_two']);
-        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_one']);
-        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_two']);
-        $this->assertNotSame($app['soap.servers']['connexion_two'], $app['soap.servers']['connexion_one']);
-        $this->assertNotSame($app['soap.clients']['connexion_two'], $app['soap.clients']['connexion_one']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_one']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_two']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connection_one']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connection_two']);
+        $this->assertNotSame($app['soap.servers']['connection_two'], $app['soap.servers']['connection_one']);
+        $this->assertNotSame($app['soap.clients']['connection_two'], $app['soap.clients']['connection_one']);
     }
 
     public function testIfWsdlIsLoadedInMultipleInstance()
@@ -77,15 +77,15 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app->register(new ZendSoapServiceProvider(), array(
             'soap.wsdl' => '<wsdl></wsdl>',
             'soap.instances' => array(
-                'connexion_one',
-                'connexion_two'
+                'connection_one',
+                'connection_two'
             )
         ));
 
-        $this->assertEquals($app['soap.clients']['connexion_one']->getWsdl(), '<wsdl></wsdl>');
-        $this->assertEquals($app['soap.clients']['connexion_two']->getWsdl(), '<wsdl></wsdl>');
-        $this->assertEquals($app['soap.servers']['connexion_one']->getWsdl(), '<wsdl></wsdl>');
-        $this->assertEquals($app['soap.servers']['connexion_two']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.clients']['connection_one']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.clients']['connection_two']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.servers']['connection_one']->getWsdl(), '<wsdl></wsdl>');
+        $this->assertEquals($app['soap.servers']['connection_two']->getWsdl(), '<wsdl></wsdl>');
     }
 
     public function testIfDiffrentWsdlAreLoadedInMultipleInstance()
@@ -93,27 +93,27 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = new Application();
         $app->register(new ZendSoapServiceProvider(), array(
             'soap.instances' => array(
-                'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
-                'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
+                'connection_one' => array('wsdl' => '<wsdl>one</wsdl>'),
+                'connection_two' => array('wsdl' => '<wsdl>two</wsdl>')
             )
         ));
 
-        $this->assertEquals($app['soap.clients']['connexion_one']->getWsdl(), '<wsdl>one</wsdl>');
-        $this->assertEquals($app['soap.clients']['connexion_two']->getWsdl(), '<wsdl>two</wsdl>');
-        $this->assertEquals($app['soap.servers']['connexion_one']->getWsdl(), '<wsdl>one</wsdl>');
-        $this->assertEquals($app['soap.servers']['connexion_two']->getWsdl(), '<wsdl>two</wsdl>');
+        $this->assertEquals($app['soap.clients']['connection_one']->getWsdl(), '<wsdl>one</wsdl>');
+        $this->assertEquals($app['soap.clients']['connection_two']->getWsdl(), '<wsdl>two</wsdl>');
+        $this->assertEquals($app['soap.servers']['connection_one']->getWsdl(), '<wsdl>one</wsdl>');
+        $this->assertEquals($app['soap.servers']['connection_two']->getWsdl(), '<wsdl>two</wsdl>');
     }
 
     public function testIfFirstLoadedInstanceIsTheDefaultOne()
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one' => array('wsdl' => '<wsdl>one</wsdl>'),
-            'connexion_two' => array('wsdl' => '<wsdl>two</wsdl>')
+            'connection_one' => array('wsdl' => '<wsdl>one</wsdl>'),
+            'connection_two' => array('wsdl' => '<wsdl>two</wsdl>')
         );
 
-        $this->assertSame($app['soap.clients']['connexion_one'], $app['soap.client']);
-        $this->assertSame($app['soap.servers']['connexion_one'], $app['soap.server']);
+        $this->assertSame($app['soap.clients']['connection_one'], $app['soap.client']);
+        $this->assertSame($app['soap.servers']['connection_one'], $app['soap.server']);
     }
 
     public function testOverloadingDefaultSoapClass()
@@ -129,15 +129,15 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one' => array('server.class' => '\stdClass'),
-            'connexion_two' => array('client.class' => '\stdClass')
+            'connection_one' => array('server.class' => '\stdClass'),
+            'connection_two' => array('client.class' => '\stdClass')
         );
 
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
-        $this->assertInstanceOf('stdClass', $app['soap.servers']['connexion_one']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_one']);
+        $this->assertInstanceOf('stdClass', $app['soap.servers']['connection_one']);
 
-        $this->assertInstanceOf('stdClass', $app['soap.clients']['connexion_two']);
-        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connexion_two']);
+        $this->assertInstanceOf('stdClass', $app['soap.clients']['connection_two']);
+        $this->assertInstanceOf('Zend\Soap\Server', $app['soap.servers']['connection_two']);
     }
 
     public function testGlobalDotNetMode()
@@ -152,11 +152,11 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one',
-            'connexion_two' => array('dotNet' => true)
+            'connection_one',
+            'connection_two' => array('dotNet' => true)
         );
-        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connexion_one']);
-        $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
+        $this->assertInstanceOf('Zend\Soap\Client', $app['soap.clients']['connection_one']);
+        $this->assertInstanceOf('Zend\Soap\Client\DotNet', $app['soap.clients']['connection_two']);
     }
 
     public function testVersionSetForGlobalInstances()
@@ -173,21 +173,21 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one' => array('version' => SOAP_1_1),
-            'connexion_two' => array('dotNet' => true),
-            'connexion_three'
+            'connection_one' => array('version' => SOAP_1_1),
+            'connection_two' => array('dotNet' => true),
+            'connection_three'
         );
 
-        $this->assertEquals($app['soap.clients']['connexion_one']->getSoapVersion(), SOAP_1_1);
-        $this->assertEquals($app['soap.servers']['connexion_one']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.clients']['connection_one']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.servers']['connection_one']->getSoapVersion(), SOAP_1_1);
 
         //dotNet use 1.1 by default
-        $this->assertEquals($app['soap.clients']['connexion_two']->getSoapVersion(), SOAP_1_1);
-        $this->assertEquals($app['soap.servers']['connexion_two']->getSoapVersion(), SOAP_1_2);
+        $this->assertEquals($app['soap.clients']['connection_two']->getSoapVersion(), SOAP_1_1);
+        $this->assertEquals($app['soap.servers']['connection_two']->getSoapVersion(), SOAP_1_2);
 
         //check default config
-        $this->assertEquals($app['soap.clients']['connexion_three']->getSoapVersion(), SOAP_1_2);
-        $this->assertEquals($app['soap.servers']['connexion_three']->getSoapVersion(), SOAP_1_2);
+        $this->assertEquals($app['soap.clients']['connection_three']->getSoapVersion(), SOAP_1_2);
+        $this->assertEquals($app['soap.servers']['connection_three']->getSoapVersion(), SOAP_1_2);
     }
 
     public function testOverloadingDefaultDotNetClass()
@@ -202,17 +202,17 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
     {
         $app = $this->getApplication();
         $app['soap.instances'] = array(
-            'connexion_one' => array(
+            'connection_one' => array(
                 'dotNet' => true,
                 'client.dotNet.class' => '\stdClass'
             ),
-            'connexion_two' => array('dotNet' => true),
-            'connexion_three'
+            'connection_two' => array('dotNet' => true),
+            'connection_three'
         );
 
-        $this->assertInstanceOf('\stdClass', $app['soap.clients']['connexion_one']);
-        $this->assertInstanceOf('\Zend\Soap\Client\DotNet', $app['soap.clients']['connexion_two']);
-        $this->assertInstanceOf('\Zend\Soap\Client', $app['soap.clients']['connexion_three']);
+        $this->assertInstanceOf('\stdClass', $app['soap.clients']['connection_one']);
+        $this->assertInstanceOf('\Zend\Soap\Client\DotNet', $app['soap.clients']['connection_two']);
+        $this->assertInstanceOf('\Zend\Soap\Client', $app['soap.clients']['connection_three']);
 
     }
 
