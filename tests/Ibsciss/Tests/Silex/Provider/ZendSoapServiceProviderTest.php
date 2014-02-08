@@ -1,6 +1,6 @@
 <?php
 
-namespace Ibsciss\Silex\Tests;
+namespace Ibsciss\Tests\Silex\Provider;
 
 use Silex\Application;
 use Ibsciss\Silex\Provider\ZendSoapServiceProvider;
@@ -244,6 +244,34 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app['soap.dotNet'] = true;
 
         $this->assertInstanceOf('\Ibsciss\Zend\Soap\Client\DotNet', $app['soap.client']);
+    }
+
+    public function test__preProcessResult()
+    {
+        $app = $this->getApplication();
+        $app['soap.dotNet'] = true;
+        $app['soap.client.dotNet.class'] = '\Ibsciss\Mocks\Zend\Soap\Client\DotNet';
+        $client = $app['soap.client'];
+        $client->setLastMethod('testCall');
+
+        //set protected method public
+        $reflection = new \ReflectionClass(get_class($client));
+        $method = $reflection->getMethod('_preProcessResult');
+        $method->setAccessible(true);
+
+        $parameters = new \stdClass();
+        $parameters->test = 'test';
+        $parametersBag = array($parameters);
+
+        $result = $method->invokeArgs($client, $parametersBag);
+        $this->assertEquals($parameters, $result);
+
+        $parameters->testCallResult = new \stdClass();
+        $parameters->testCallResult->test = 'test';
+        $parametersBag = array($parameters);
+
+        $result = $method->invokeArgs($client, $parametersBag);
+        $this->assertEquals($parameters->testCallResult, $result);
     }
 
     public function getApplication()
