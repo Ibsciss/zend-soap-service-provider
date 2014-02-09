@@ -246,7 +246,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertInstanceOf('\Ibsciss\Zend\Soap\Client\DotNet', $app['soap.client']);
     }
 
-    public function test__preProcessResult()
+    public function test_preProcessResult()
     {
         $app = $this->getApplication();
         $app['soap.dotNet'] = true;
@@ -272,6 +272,20 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
 
         $result = $method->invokeArgs($client, $parametersBag);
         $this->assertEquals($parameters->testCallResult, $result);
+    }
+
+    public function testExceptionOverride()
+    {
+        $app = $this->getApplication();
+        $server = $app['soap.server'];
+        $fault = $server->fault(new \Exception('test'));
+
+        $exception = $server->getException();
+        $this->assertInstanceOf('\Exception', $exception);
+        $this->assertEquals('test', $exception->getMessage());
+
+        $this->assertInstanceOf('\SoapFault', $fault);
+        $this->assertEquals('Unknown error', $fault->getMessage());
     }
 
     public function getApplication()

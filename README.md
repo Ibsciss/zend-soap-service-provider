@@ -23,7 +23,7 @@ For more informations about Zend Soap, check the Zend Framework documentation :
 
 ##Usages
 
-###Basic usages
+###Basic use
 
 When the service provider is registered, you have access to the two basic services :
 * **soap.server**, instance of Zend\Soap\Server`
@@ -61,7 +61,7 @@ $app['soap.instances'] = array(
 );
 ```
 
-You have access to you instances with the two services :
+You have access to your instances with the two services :
 * `soap.clients`
 * `soap.servers`
 
@@ -137,6 +137,8 @@ So the serviceProvider extends the `DotNet` class to add a `exists` condition on
 
 ### In `\Zend\Soap\Server`
 
+#### Debug mode
+
 When an exception is raised in your code the `\Zend\Soap\Server` catch it and check if this is an authorized exception. If not, and for security reason, it send an "Unknow error" message. And if in production its a sane behavior, its really annoying during development & tests process.
 
 So the serviceProvider extends the `Server` class to add a `debugMode` method which is automatically activated when the silex `debug` options is `true` (manual enable/disable debug mode is provide with the `setDebugMode($boolean)` server method).
@@ -151,6 +153,17 @@ $app['soap.server']->setDebugMode(false);
 ````
 
 **In debug mode the Server send all exceptions to the soap client.**
+
+#### Exception management
+
+As described below, when an exception is catch by the `Zend\Soap\Server`, the error message became "Unknown error". So even if you write the exception in logs, you have no ideas of the failure root cause, to avoid this trouble a `getException` method is available in the provider's server class.
+Ecample :
+
+```php
+$app['soap.server']->fault(new \Exception('test'));
+
+$app['soap.server']->getException(); //return the Exception instance given as attribute to the fault method.
+```
 
 ##Advanced topic
 

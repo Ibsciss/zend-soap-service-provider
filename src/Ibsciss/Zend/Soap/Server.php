@@ -12,6 +12,11 @@ class Server extends \Zend\Soap\Server
     protected $debug = false;
 
     /**
+     * catch exception during soap request
+     * @var \Exception
+     */
+    protected $exception = null;
+    /**
      * Set the debug mode.
      * In debug mode, all exceptions are send to the client.
      * @param boolean $debug
@@ -30,5 +35,16 @@ class Server extends \Zend\Soap\Server
     public function isRegisteredAsFaultException($fault)
     {
         return ($this->debug) ? true : parent::isRegisteredAsFaultException($fault);
+    }
+
+    public function fault($fault = null, $code = 'Receiver')
+    {
+        $this->exception = (is_string($fault)) ? new \Exception($fault) : $fault;
+        return parent::fault($fault, $code);
+    }
+
+    public function getException()
+    {
+        return $this->exception;
     }
 }
