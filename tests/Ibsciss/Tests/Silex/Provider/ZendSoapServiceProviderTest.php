@@ -288,6 +288,16 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals('Unknown error', $fault->getMessage());
     }
 
+    public function testSoapServerObjectAccess()
+    {
+        $app = $this->getApplication();
+        $server = $app['soap.server'];
+        $server->setOptions(array('location'=>'test://', 'uri'=>'http://framework.zend.com'));
+        $internalServer = $server->getSoap();
+        $this->assertInstanceOf('\SoapServer', $internalServer);
+        $this->assertSame($internalServer, $server->getSoap());
+    }
+
     public function getApplication()
     {
         $app = new Application();

@@ -16,6 +16,13 @@ class Server extends \Zend\Soap\Server
      * @var \Exception
      */
     protected $exception = null;
+
+    /**
+     * Internal SoapServer instance
+     * @var SoapServer
+     */
+    protected $server = null;
+
     /**
      * Set the debug mode.
      * In debug mode, all exceptions are send to the client.
@@ -46,5 +53,19 @@ class Server extends \Zend\Soap\Server
     public function getException()
     {
         return $this->exception;
+    }
+
+    protected function _getSoap()
+    {
+        if($this->server instanceOf \SoapServer)
+            return $this->server;
+
+        $this->server = parent::_getSoap();
+        return $this->server;
+    }
+
+    public function getSoap()
+    {
+        return $this->_getSoap();
     }
 }

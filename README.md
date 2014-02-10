@@ -152,17 +152,26 @@ $app['soap.server']->setDebugMode();
 $app['soap.server']->setDebugMode(false);
 ````
 
-**In debug mode the Server send all exceptions to the soap client.**
+**In debug mode, the Server send all exceptions to the soap client.**
 
 #### Exception management
 
 As described below, when an exception is catch by the `Zend\Soap\Server`, the error message became "Unknown error". So even if you write the exception in logs, you have no ideas of the failure root cause, to avoid this trouble a `getException` method is available in the provider's server class.
-Ecample :
+Example:
 
 ```php
 $app['soap.server']->fault(new \Exception('test'));
 
 $app['soap.server']->getException(); //return the Exception instance given as attribute to the fault method.
+```
+
+### Internal '\SoapServer' instance
+
+The `Zend\Soap\Server` use internally a `\SoapServer` instance to handle request. In certain case, you need an access to this instance (for example to send a SoapFault when the `setReturnResponse` is set at true). That's why, the provider add a `getSoap()` method which provide the current internal `\SoapServer` instance.
+Example:
+
+```php
+$app['soap.server']->getSoap()->fault(new \SoapFault('an error occured'));
 ```
 
 ##Advanced topic
