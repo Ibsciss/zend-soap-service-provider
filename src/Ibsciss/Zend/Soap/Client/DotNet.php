@@ -16,8 +16,9 @@ class DotNet extends \Zend\Soap\Client\DotNet
     {
         $resultProperty = $this->getLastMethod() . 'Result';
 
-        if(isset($result->$resultProperty))
+        if(property_exists($result, $resultProperty)){
             return $result->$resultProperty;
+        }
 
         return $result;
     }

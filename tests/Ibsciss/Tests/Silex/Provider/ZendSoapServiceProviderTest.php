@@ -274,6 +274,27 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $this->assertEquals($parameters->testCallResult, $result);
     }
 
+    public function test_preProcessResultWithNullValue()
+    {
+        $app = $this->getApplication();
+        $app['soap.dotNet'] = true;
+        $app['soap.client.dotNet.class'] = '\Ibsciss\Mocks\Zend\Soap\Client\DotNet';
+        $client = $app['soap.client'];
+        $client->setLastMethod('testCall');
+        $parameters = new \stdClass();
+
+        //set protected method public
+        $reflection = new \ReflectionClass(get_class($client));
+        $method = $reflection->getMethod('_preProcessResult');
+        $method->setAccessible(true);
+
+        $parameters->testCallResult = null;
+        $parametersBag = array($parameters);
+
+        $result = $method->invokeArgs($client, $parametersBag);
+        $this->assertEquals(null, $result);
+    }
+
     public function testExceptionOverride()
     {
         $app = $this->getApplication();
