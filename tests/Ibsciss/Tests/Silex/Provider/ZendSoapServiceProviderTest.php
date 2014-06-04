@@ -221,7 +221,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = $this->getApplication();
 
         $beforeDebug = $app['soap.server']->fault(new \Exception('test'));
-        $app['soap.server']->setDebugMode();
+        $app['soap.server']->setDebugMode(true);
         $afterDebug = $app['soap.server']->fault(new \Exception('test'));
 
         $this->assertEquals('Unknown error', $beforeDebug->getMessage());
@@ -243,7 +243,7 @@ class ZendSoapServiceProviderTest extends \PHPUnit_Framework_TestCase
         $app = $this->getApplication();
         $app['soap.dotNet'] = true;
 
-        $this->assertInstanceOf('\Ibsciss\Zend\Soap\Client\DotNet', $app['soap.client']);
+        $this->assertInstanceOf('\Zend\Soap\Client\DotNet', $app['soap.client']);
     }
 
     public function test_preProcessResult()

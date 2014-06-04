@@ -123,17 +123,9 @@ $app['soap.servers']['connection_one']->getWsdl() //return <wsdl></wsdl>
 $app['soap.servers']['connection_two']->getWsdl() //return <wsdl>anotherOne</wsdl>
 ```
 
-## Differences with the \Zend\Soap implementation
+## About \Zend\Soap implementation
 
-There is two minor change beetween the original `\Zend\Soap` package and the `ZendSoapServiceProvider` provided packages :
-
-### In `\Zend\Soap\Client\DotNet`
-
-A condition is added in the `_preProcessResult` method: the dotNet soap implementation send the result in a `[LastRequest]Result` xml node, so the DotNet _preProcessResult return directly this node.
-
-But in some case, when the method return anythings and if this behavior is not defined in the ws definition (wsdl for example), this behavior can rise an notice error because the searched node does not exists.
-
-So the serviceProvider extends the `DotNet` class to add a `exists` condition on the `[LastRequest]Result` XML node to avoid this error.
+The package use now the official `\Zend\Soap` package
 
 ### In `\Zend\Soap\Server`
 
@@ -146,7 +138,7 @@ Example :
 
 ```php
 //enable:
-$app['soap.server']->setDebugMode();
+$app['soap.server']->setDebugMode(true);
 
 //disable:
 $app['soap.server']->setDebugMode(false);
