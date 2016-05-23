@@ -21,7 +21,7 @@
     },
     "require": {
         "zendframework/zend-soap": "~2.2",
-        "silex/silex": "~1.1"
+        "pimple/pimple": "~3.0"
     },
     "require-dev": {
         "satooshi/php-coveralls": "dev-master"

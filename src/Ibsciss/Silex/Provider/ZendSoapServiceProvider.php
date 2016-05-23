@@ -1,14 +1,14 @@
 <?php
 namespace Ibsciss\Silex\Provider;
 
-use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\Container;
+use Pimple\ServiceProviderInterface;
 
 use Zend\Soap;
 
 class ZendSoapServiceProvider implements ServiceProviderInterface
 {
-    public function register(Application $app)
+    public function register(Container $app)
     {
         //define options
         $app['soap.wsdl'] = (isset($app['soap.wsdl'])) ? $app['soap.wsdl'] : null;
@@ -86,6 +86,4 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
         });
 
     }
-
-    public function boot(Application $app){}
 }
