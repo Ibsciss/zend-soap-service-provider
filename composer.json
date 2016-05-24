@@ -24,7 +24,8 @@
         "pimple/pimple": "~3.0"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
+        "silex/silex": "~2.0"
     },
     "autoload": {
         "psr-0": {
