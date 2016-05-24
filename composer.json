@@ -21,10 +21,10 @@
     },
     "require": {
         "zendframework/zend-soap": "~2.2",
-        "silex/silex": "~1.1"
+        "silex/silex": "~2.0"
     },
     "require-dev": {
-        "satooshi/php-coveralls": "dev-master"
+        "satooshi/php-coveralls": "dev-master",
     },
     "autoload": {
         "psr-0": {

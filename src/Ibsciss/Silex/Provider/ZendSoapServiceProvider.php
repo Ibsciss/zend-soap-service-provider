@@ -2,7 +2,7 @@
 namespace Ibsciss\Silex\Provider;
 
 use Silex\Application;
-use Silex\ServiceProviderInterface;
+use Pimple\ServiceProviderInterface;
 
 use Zend\Soap;
 
@@ -86,6 +86,4 @@ class ZendSoapServiceProvider implements ServiceProviderInterface
         });
 
     }
-
-    public function boot(Application $app){}
 }
